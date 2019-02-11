@@ -1857,6 +1857,12 @@ bool CWeaponClass::FireWeapon (CInstalledDevice *pDevice,
 	if (retbSourceDestroyed)
 		*retbSourceDestroyed = false;
 
+	//	See if we have enough ammo/charges to proceed. If we don't then we
+	//	cannot continue.
+
+	if (!ConsumeAmmo(ItemCtx, pShot, iRepeatingCount, retbConsumedItems))
+		return false;
+
 	//	There are various ways in which we can fail.
 
 	CFailureDesc::EFailureTypes iFailureMode = CFailureDesc::failNone;
@@ -1886,12 +1892,6 @@ bool CWeaponClass::FireWeapon (CInstalledDevice *pDevice,
 		if (!UpdateShipCounter(ItemCtx, pShot))
 			return false;
 		}
-	
-	//	See if we have enough ammo/charges to proceed. If we don't then we 
-	//	cannot continue.
-
-	if (!ConsumeAmmo(ItemCtx, pShot, iRepeatingCount, retbConsumedItems))
-		return false;
 
 	//	If we're damaged, disabled, or badly designed, we have a chance of 
 	//	failure.
